@@ -6,10 +6,6 @@ const extractResumeText = require(
 
 const OpenAI = require("openai");
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 // ==========================================
 // MOCK INTERVIEW PREP
 // ==========================================
@@ -121,7 +117,6 @@ const mockInterviewPrep = (
   };
 };
 
-
 // ==========================================
 // GENERATE INTERVIEW PREP
 // ==========================================
@@ -183,10 +178,12 @@ const generateInterviewPrep = async (
       return res.status(200).json({
         message:
           "Interview preparation generated successfully",
+
         resume: {
           id: resume._id,
           name: resume.originalName,
         },
+
         preparation,
       });
     }
@@ -194,6 +191,11 @@ const generateInterviewPrep = async (
     // ==========================================
     // REAL OPENAI MODE
     // ==========================================
+
+    // Create OpenAI client only when real AI is enabled
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
 
     const prompt = `
 You are an expert technical interviewer and career coach.

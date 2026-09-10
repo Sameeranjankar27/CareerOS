@@ -1,9 +1,5 @@
 const OpenAI = require("openai");
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 const mockAnalysis = (resumeText, jobDescription) => {
   const resume = resumeText.toLowerCase();
   const job = jobDescription.toLowerCase();
@@ -104,7 +100,6 @@ const analyzeResume = async (
   resumeText,
   jobDescription
 ) => {
-
   // Temporary mock mode while API credits are unavailable
   if (process.env.MOCK_AI === "true") {
     console.log("Using MOCK AI analysis");
@@ -114,6 +109,11 @@ const analyzeResume = async (
       jobDescription
     );
   }
+
+  // Create OpenAI client only when real AI is enabled
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
 
   // Real OpenAI analysis
   const prompt = `

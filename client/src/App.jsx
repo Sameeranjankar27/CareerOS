@@ -1,4 +1,9 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+import { AuthProvider } from "./context/AuthContext";
+
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import Layout from "./components/Layout/Layout";
 
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
@@ -7,98 +12,52 @@ import Jobs from "./pages/Jobs/Jobs";
 import Resume from "./pages/Resume/Resume";
 import AIAnalysis from "./pages/AIAnalysis/AIAnalysis";
 import AIInterviewPrep from "./pages/AIInterviewPrep/AIInterviewPrep";
-
-import Layout from "./components/Layout/Layout";
-import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Notifications from "./pages/Notifications/Notifications";
-
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
+      <AuthProvider>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<Login />} />
 
-        {/* PUBLIC ROUTES */}
+          <Route path="/register" element={<Register />} />
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+          {/* Protected Routes */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Dashboard />} />
 
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+            <Route path="dashboard" element={<Dashboard />} />
 
-        {/* PROTECTED ROUTES */}
+            <Route path="jobs" element={<Jobs />} />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Dashboard />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+            <Route path="resume" element={<Resume />} />
 
-        <Route
-          path="/jobs"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Jobs />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+            <Route path="ai-analysis" element={<AIAnalysis />} />
 
-        <Route
-          path="/resume"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Resume />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+            <Route
+              path="ai-interview-prep"
+              element={<AIInterviewPrep />}
+            />
 
-        <Route
-          path="/ai-analysis"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <AIAnalysis />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+            <Route
+              path="notifications"
+              element={<Notifications />}
+            />
+          </Route>
 
-        <Route
-          path="/ai-interview-prep"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <AIInterviewPrep />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-  path="/notifications"
-  element={
-    <ProtectedRoute>
-      <Layout>
-        <Notifications />
-      </Layout>
-    </ProtectedRoute>
-  }
-/>
-
-      </Routes>
+          {/* Unknown route ko login par bhej do */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

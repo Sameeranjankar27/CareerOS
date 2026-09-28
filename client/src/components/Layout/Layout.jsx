@@ -1,7 +1,8 @@
+import { Outlet } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import Navbar from "../Navbar/Navbar";
 
-function Layout({ children }) {
+function Layout() {
   return (
     <div className="app-layout">
       <Sidebar />
@@ -10,7 +11,7 @@ function Layout({ children }) {
         <Navbar />
 
         <main className="page-content">
-          {children}
+          <Outlet />
         </main>
       </div>
     </div>
